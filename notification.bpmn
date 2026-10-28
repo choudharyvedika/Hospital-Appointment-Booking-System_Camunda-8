@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" 
+                  id="Definitions_SendNotification" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="send-notification" name="Send Notification" isExecutable="true">
+    <bpmn:startEvent id="Start_Notification" name="Notification Requested">
+      <bpmn:outgoing>Flow_n1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_TelegramNotify" name="Send Telegram Message">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="http" />
+        <zeebe:ioMapping>
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="https://httpbin.org/post" target="url" />
+          <zeebe:input source="={&#34;chat_id&#34;: recipientId, &#34;text&#34;: messageText}" target="body" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_n1</bpmn:incoming>
+      <bpmn:outgoing>Flow_n2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_Notification" name="Notification Sent">
+      <bpmn:incoming>Flow_n2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_n1" sourceRef="Start_Notification" targetRef="Task_TelegramNotify" />
+    <bpmn:sequenceFlow id="Flow_n2" sourceRef="Task_TelegramNotify" targetRef="End_Notification" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="send-notification">
+      <bpmndi:BPMNShape id="Start_Notification_di" bpmnElement="Start_Notification">
+        <dc:Bounds x="180" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_TelegramNotify_di" bpmnElement="Task_TelegramNotify">
+        <dc:Bounds x="270" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Notification_di" bpmnElement="End_Notification">
+        <dc:Bounds x="430" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_n1_di" bpmnElement="Flow_n1">
+        <di:waypoint x="216" y="118" />
+        <di:waypoint x="270" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_n2_di" bpmnElement="Flow_n2">
+        <di:waypoint x="370" y="118" />
+        <di:waypoint x="430" y="118" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

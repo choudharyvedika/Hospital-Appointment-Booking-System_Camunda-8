@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" 
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" 
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" 
+             id="Definitions_SlotDecision" 
+             name="Slot Decision" 
+             namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="slot_decision" name="Slot Availability Decision">
+    <decisionTable id="DecisionTable_1" hitPolicy="UNIQUE">
+      <input id="Input_1" label="Department">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>department</text>
+        </inputExpression>
+      </input>
+      <input id="Input_2" label="Booked Count">
+        <inputExpression id="InputExpression_2" typeRef="number">
+          <text>bookedCount</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Slot Status" name="slotStatus" typeRef="string" />
+      <output id="Output_2" label="Suggested Action" name="suggestedAction" typeRef="string" />
+      
+      <!-- Rule 1: Available -->
+      <rule id="Rule_1">
+        <inputEntry id="UnaryTests_1">
+          <text>"Cardiology"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_2">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1">
+          <text>"AVAILABLE"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_2">
+          <text>"PROCEED_BOOKING"</text>
+        </outputEntry>
+      </rule>
+      
+      <!-- Rule 2: Full -->
+      <rule id="Rule_2">
+        <inputEntry id="UnaryTests_3">
+          <text>"Cardiology"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_4">
+          <text>&gt;= 10</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_3">
+          <text>"FULL"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_4">
+          <text>"REJECT_SLOT_FULL"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1">
+      <dmndi:DMNShape id="DMNShape_1" dmnElementRef="slot_decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
